@@ -142,34 +142,93 @@ app.use(cors);
 app.use(contentType);
 app.use(bodyParser);
 
-let users = [];
+let eventos = [
+    {
+        id: crypto.randomUUID(),
+        titulo: "Festival Gastronômico do Centro",
+        cat: "Gastronomia",
+        data: "2025-09-20",
+        hora: "18:00",
+        local: "Rua Ponciano, Centro",
+        preco: "Gratuito",
+        img: "https://douradosagora.com.br/media/posts/390241/dourados-tera-neste-sabado-balaio-festival-com-musica-arte-gastronomia-e-cultura-17522582977313.jpg",
+        desc: "Barracas, food trucks e música ao vivo com artistas locais."
+    }
+];
 
-// Endpoint para criação de usuário
-app.post('/users', (req, res) => {
-  const user = req.body;
-  users.push(user);
-  res.status(201).send('Usuário criado com sucesso!');
+let cidades = [
+    {
+        id: crypto.randomUUID(),
+        nome: "Dourados",
+        uf: "MS",
+        desc: "Segunda maior cidade de MS, polo universitário e cultural."
+    },
+    {
+        id: crypto.randomUUID(),
+        nome: "Itaporã",
+        uf: "MS",
+        desc: "Cidade vizinha com tradições culturais marcantes."
+    }
+];
+
+let pontoTuristico = []
+
+
+// Endpoint para criação de eventos
+app.post('/eventos', (req: Request, res: Response) => {
+    const evento = req.body;
+    const { titulo, cat, data, hora, local, preco, img, desc } = evento;
+    const novoEventoRecebe = {
+        id: crypto.randomUUID(),
+        titulo,
+        cat,
+        data,
+        hora,
+        local,
+        preco,
+        img,
+        desc
+    }
+    eventos.push(novoEventoRecebe);
+    res.status(201).send('Evento criado com sucesso!');
 });
 
-// Endpoint para listagem de usuários
-app.get('/users', (req, res) => {
-  res.json(users);
+// Endpoint para listagem de eventos
+app.get('/eventos', (req: Request, res: Response) => {
+    res.json(eventos);
 });
 
-// Endpoint para atualização de usuário
-app.put('/users/:id', (req, res) => {
-  const id = req.params.id;
-  const updatedUser = req.body;
-  users = users.map((user) => (user.id === id ? updatedUser : user));
-  res.send('Usuário atualizado com sucesso!');
+// Endpoint para atualização de evento
+app.put('/eventos/:id', (req: Request, res: Response) => {
+    const id = req.params.id;
+    const updatedEvento = req.body;
+    eventos = eventos.map((evento) => (evento.id === id ? updatedEvento : evento));
+    res.send('Evento atualizado com sucesso!');
 });
 
-// Endpoint para deletar usuário
-app.delete('/users/:id', (req, res) => {
-  const id = req.params.id;
-  users = users.filter((user) => user.id !== id);
-  res.send('Usuário deletado com sucesso!');
+// Endpoint para deletar evento
+app.delete('/evento/:id', (req: Request, res: Response) => {
+    const id = req.params.id;
+    eventos = eventos.filter((evento) => evento.id !== id);
+    res.send('Evento deletado com sucesso!');
 });
+
+app.post('/cidade', (req: Request, res: Response) => {
+    const { nome, uf, desc } = req.body;
+    const novaCidade = {
+        id: crypto.randomUUID(),
+        nome, 
+        uf, 
+        desc
+    }
+    cidades.push(novaCidade);
+
+    res.status(201).send('Cidade criado com sucesso!');
+})
+
+app.get('/cidade', (req: Request, res: Response) => {
+    res.json(cidades);
+})
 
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
